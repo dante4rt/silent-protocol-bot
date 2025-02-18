@@ -27,17 +27,19 @@ async function main() {
     return;
   }
 
-  tokens.forEach((token) => {
-    const worker = new Worker(__filename, { workerData: token });
+  tokens.forEach((token, index) => {
+    const worker = new Worker(__filename, { 
+      workerData: { token, index }
+    });
     worker.on('message', (message) => {
       console.log(message);
     });
     worker.on('error', (error) => {
-      logError(`❌ Worker error: ${error}`);
+      logError(`❌ Worker ${index} error: ${error}`);
     });
     worker.on('exit', (code) => {
       if (code !== 0) {
-        logError(`❌ Worker stopped with exit code ${code}`);
+        logError(`❌ Worker ${index} stopped with exit code ${code}`);
       }
     });
   });
@@ -46,6 +48,8 @@ async function main() {
 if (isMainThread) {
   main();
 } else {
-  const token = workerData;
-  runAutomation(token).catch((err) => logError(`❌ Worker error: ${err}`));
+  const { token, index } = workerData;
+  runAutomation(token, index).catch((err) => 
+    logError(`❌ Worker ${index} error: ${err}`)
+  );
 }

@@ -3,7 +3,7 @@ const { POSITION_URL } = require('../config/constants');
 const { getHeaders } = require('../utils/headers');
 const { logInfo, logWarn, logError } = require('../utils/logger');
 
-async function getPosition(token) {
+async function getPosition(token, index) {
   try {
     const response = await axios.get(POSITION_URL, {
       headers: getHeaders(token),
@@ -11,21 +11,16 @@ async function getPosition(token) {
     if (response.status === 200) {
       const data = response.data;
       logInfo(
-        `[Token ${token.substring(0, 6)}...] 📍 Position: Behind ${
-          data.behind
-        }, ⏳ Time Remaining: ${data.timeRemaining}`
+        `[Token ${index}] 📍 Position: Behind ${data.behind}, ⏳ Time Remaining: ${data.timeRemaining}`
       );
       return data;
     }
     logWarn(
-      `[Token ${token.substring(
-        0,
-        6
-      )}...] ❗ Failed to fetch position. Status: ${response.status}`
+      `[Token ${index}] ❗ Failed to fetch position. Status: ${response.status}`
     );
   } catch (e) {
     logError(
-      `[Token ${token.substring(0, 6)}...] ❌ Error fetching position: ${e}`
+      `[Token ${index}] ❌ Error fetching position: ${e}`
     );
   }
 }
