@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "colors": "^1.4.0",
-    "moment": "^2.30.1"
+    "moment": "^2.30.1",
+    "dotenv": "^16.0.3"
   }
 }
